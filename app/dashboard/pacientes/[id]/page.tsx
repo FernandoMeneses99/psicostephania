@@ -9,9 +9,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { FollowUpsSection } from '@/components/patients/follow-ups-section'
 import { PatientForm } from '@/components/patients/patient-form'
 import { PatientStatusActions } from '@/components/patients/patient-status-actions'
+import { RegisterConsentButton } from '@/components/documents/register-consent-button'
 import { getPatientById } from '@/lib/services/patients'
+import { getPatientConsents } from '@/lib/services/documents'
 import { PATIENT_STATUS_LABELS } from '@/lib/constants/patients'
-import { cn, formatDate } from '@/lib/utils'
+import { cn, formatDate, formatDateTime } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Paciente',
@@ -30,7 +32,10 @@ export default async function PatientDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const patient = await getPatientById(id)
+  const [patient, consents] = await Promise.all([
+    getPatientById(id),
+    getPatientConsents(id),
+  ])
 
   if (!patient) notFound()
 
@@ -120,6 +125,57 @@ export default async function PatientDetailPage({
           <FollowUpsSection patientId={patient.id} items={patient.follow_ups} />
         </div>
       </div>
+
+      <Card>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-sans text-xl text-ink-900">Consentimientos</h2>
+              <p className="text-sm text-ink-500">
+                Registro de firmas del consentimiento informado.
+              </p>
+            </div>
+            <RegisterConsentButton patientId={patient.id} />
+          </div>
+
+          {consents.length === 0 ? (
+            <p className="rounded-2xl border border-dashed border-beige-200 bg-beige-50 px-4 py-6 text-center text-sm text-ink-500">
+              Este paciente aún no ha firmado un consentimiento. Regístralo con
+              la versión activa.
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {consents.map((consent) => (
+                <li
+                  key={consent.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-beige-100 bg-beige-50 px-4 py-3"
+                >
+                  <div className="text-sm">
+                    <p className="font-medium text-ink-900">
+                      Versión {consent.consent_versions?.version ?? '—'}
+                      {consent.accepted_by
+                        ? ` · Firmado por ${consent.accepted_by}`
+                        : ''}
+                    </p>
+                    <p className="text-ink-500">
+                      {consent.accepted_at
+                        ? formatDateTime(consent.accepted_at)
+                        : 'Sin fecha de aceptación'}
+                    </p>
+                  </div>
+                  <Button asChild variant="outline" size="sm">
+                    <Link
+                      href={`/dashboard/pacientes/${patient.id}/consentimiento/${consent.id}`}
+                    >
+                      Ver formato
+                    </Link>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
