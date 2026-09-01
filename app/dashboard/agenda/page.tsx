@@ -22,7 +22,8 @@ export const metadata: Metadata = {
 type SearchParams = Promise<{ date?: string }>
 
 function isValidDateKey(value: string | undefined): value is string {
-  return !!value && /^\d{4}-\d{2}-\d{2}$/.test(value)
+  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  return !Number.isNaN(new Date(`${value}T00:00:00-05:00`).getTime())
 }
 
 export default async function AgendaPage({

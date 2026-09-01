@@ -1,12 +1,15 @@
 import { createClient } from '@/lib/supabase/server'
 import type { AppointmentWithDetails } from '@/lib/constants/appointments'
 import { bogotaDate, dateKeyFromISO } from '@/lib/utils'
+import { selectedYearMonth, todayKey } from '@/lib/dates'
 
 /**
  * Rango en ISO UTC de un día local de Bogotá (clave YYYY-MM-DD).
+ * Si la clave no es una fecha real, cae al día actual.
  */
 export function dayRangeInBogota(key: string): { start: string; end: string } {
   const start = bogotaDate(key)
+  if (Number.isNaN(start.getTime())) return dayRangeInBogota(todayKey())
   return {
     start: start.toISOString(),
     end: new Date(start.getTime() + 86_400_000).toISOString(),
@@ -15,10 +18,14 @@ export function dayRangeInBogota(key: string): { start: string; end: string } {
 
 /**
  * Rango en ISO UTC de un mes local de Bogotá.
- * month es 1-12.
+ * month es 1-12. Si el rango no es una fecha real, cae al mes actual.
  */
 export function monthRangeInBogota(year: number, month: number): { start: string; end: string } {
   const start = bogotaDate(`${year}-${String(month).padStart(2, '0')}-01`)
+  if (Number.isNaN(start.getTime())) {
+    const { year: currentYear, month: currentMonth } = selectedYearMonth(todayKey())
+    return monthRangeInBogota(currentYear, currentMonth)
+  }
   return {
     start: start.toISOString(),
     end: new Date(start.getTime() + 32 * 86_400_000).toISOString(),
@@ -64,7 +71,11 @@ export async function getMonthAppointmentDays(
 
   return [
     ...new Set(
-      data.map((appointment) => dateKeyFromISO(appointment.starts_at)),
+      data
+        .map((appointment) =>
+          dateKeyFromISO(appointment.starts_at),
+        )
+        .filter((key) => key !== '0000-00-00'),
     ),
   ]
 }
