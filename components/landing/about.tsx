@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 const highlights = [
   'Acompañamiento desde la cercanía y el respeto',
   'Enfoque profesional, sensible y confidencial',
@@ -31,7 +33,9 @@ export function About() {
               className="h-2 w-2 shrink-0 rounded-full bg-sage-400"
               aria-hidden
             />
-            <p className="text-sm text-ink-500">Foto y formación completas disponibles próximamente</p>
+            <p className="text-sm text-ink-500">
+              Formación completa disponible próximamente
+            </p>
           </div>
 
           <ul className="mt-6 space-y-3">
@@ -51,8 +55,15 @@ export function About() {
         </div>
 
         <div className="mx-auto w-full max-w-md rounded-[2.5rem] border border-beige-100 bg-beige-50 p-8 text-center shadow-card">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-primary-100">
-            <span className="font-sans text-3xl text-primary-600">S</span>
+          <div className="mx-auto h-64 w-56 overflow-hidden rounded-[2rem] border-4 border-white bg-white shadow-soft">
+            <Image
+              src="/stephania_baron.webp"
+              alt="Foto de Psic. Stephania, psicóloga profesional"
+              width={640}
+              height={800}
+              priority
+              className="h-full w-full object-cover"
+            />
           </div>
           <h3 className="mt-5 font-sans text-xl text-ink-900">
             Psic. Stephania
