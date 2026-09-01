@@ -17,18 +17,12 @@ export async function submitAppointmentRequest(
 ) {
   const supabase = createClient()
 
-  const { data, error } = await supabase
-    .from('appointment_requests')
-    .insert({
-      full_name: input.full_name,
-      email: input.email,
-      phone: input.phone ?? null,
-      message: input.message ?? null,
-    })
-    .select('id')
-    .single()
+  const { error } = await supabase.from('appointment_requests').insert({
+    full_name: input.full_name,
+    email: input.email,
+    phone: input.phone ?? null,
+    message: input.message ?? null,
+  })
 
   if (error) throw error
-
-  return data
 }

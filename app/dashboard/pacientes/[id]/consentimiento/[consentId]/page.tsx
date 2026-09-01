@@ -24,6 +24,20 @@ export default async function ConsentPrintPage({
 
   const patient = consent.patients
   const version = consent.consent_versions
+  const acceptedAt = consent.accepted_at
+
+  const documentLabel = patient?.document_type
+    ? `${patient.document_type} ${patient.document_number ?? ''}`
+    : (patient?.document_number ?? '')
+
+  function renderContent(content: string): string {
+    return content
+      .replace(/\{paciente\}/gi, patient?.full_name ?? '')
+      .replace(/\{documento\}/gi, documentLabel)
+      .replace(/\{telefono\}/gi, patient?.phone ?? '')
+      .replace(/\{email\}/gi, patient?.email ?? '')
+      .replace(/\{fecha\}/gi, acceptedAt ? formatDate(acceptedAt) : '')
+  }
 
   return (
     <main className="min-h-dvh bg-ink-100/40 p-4 sm:p-8 print:bg-white print:p-0">
@@ -56,9 +70,7 @@ export default async function ConsentPrintPage({
             <div>
               <p className="text-ink-400">Documento</p>
               <p className="font-medium text-ink-900">
-                {patient?.document_type
-                  ? `${patient.document_type} ${patient.document_number ?? ''}`
-                  : patient?.document_number ?? '—'}
+                {documentLabel || '—'}
               </p>
             </div>
             <div>
@@ -86,7 +98,7 @@ export default async function ConsentPrintPage({
           </div>
 
           <div className="mt-8 whitespace-pre-wrap rounded-2xl bg-beige-50 p-5 font-sans text-sm leading-relaxed text-ink-700">
-            {version?.content}
+            {version?.content ? renderContent(version.content) : ''}
           </div>
 
           <div className="mt-12 grid gap-10 sm:grid-cols-2">

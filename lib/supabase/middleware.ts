@@ -36,9 +36,13 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data, error } = await supabase.auth
+    .getUser()
+    .catch(() => ({ data: { user: null }, error: null }))
 
-  return { supabaseResponse, user }
+  if (error) {
+    return { supabaseResponse, user: null }
+  }
+
+  return { supabaseResponse, user: data.user }
 }

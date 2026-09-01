@@ -10,7 +10,7 @@ export default async function DashboardLayout({
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }))
 
   if (!user) {
     redirect('/login')
