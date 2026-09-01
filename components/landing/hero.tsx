@@ -35,8 +35,8 @@ export function Hero() {
           <div className="relative overflow-hidden rounded-[2.5rem] border border-beige-100 bg-white p-3 shadow-floating">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/hero.png"
-              alt="Espacio cálido de consulta psicológica que transmite tranquilidad"
+              src="/psicologyst.webp"
+              alt="Psicóloga clínica en un espacio cálido y profesional"
               className="aspect-[4/5] w-full rounded-[2rem] object-cover"
               width={400}
               height={500}
