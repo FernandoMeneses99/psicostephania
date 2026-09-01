@@ -211,3 +211,53 @@ export async function updateFollowUpStatus(
   if (error) return { error: 'No se pudo actualizar el seguimiento.' }
   return { error: null }
 }
+
+export type ClinicalRecordOverview = {
+  patient_id: string
+  patient_name: string
+  patient_status: PatientStatus
+  record_id: string | null
+  record_updated_at: string | null
+}
+
+export async function getClinicalRecordsOverview(): Promise<
+  ClinicalRecordOverview[]
+> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('patients')
+    .select('id, full_name, status, clinical_records(id, updated_at)')
+    .order('created_at', { ascending: false })
+
+  if (error || !data) return []
+
+  return data.map((patient) => {
+    const embedded = patient.clinical_records
+    const record = Array.isArray(embedded)
+      ? (embedded[0] ?? null)
+      : (embedded ?? null)
+    return {
+      patient_id: patient.id,
+      patient_name: patient.full_name,
+      patient_status: patient.status,
+      record_id: record?.id ?? null,
+      record_updated_at: record?.updated_at ?? null,
+    }
+  })
+}
+
+export type FollowUpOverview = FollowUpRow & {
+  patients: { id: string; full_name: string } | null
+}
+
+export async function getFollowUpsOverview(): Promise<FollowUpOverview[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('follow_ups')
+    .select('*, patients(id, full_name)')
+    .order('follow_up_date', { ascending: false })
+    .order('created_at', { ascending: false })
+
+  if (error || !data) return []
+  return data as FollowUpOverview[]
+}
