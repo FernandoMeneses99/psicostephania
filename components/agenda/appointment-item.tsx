@@ -11,6 +11,8 @@ import {
   APPOINTMENT_FLOW,
   APPOINTMENT_MODALITY_LABELS,
   APPOINTMENT_STATUS_LABELS,
+  FOLLOW_UP_NOTE,
+  isFollowUpAppointment,
   type AppointmentStatus,
   type AppointmentWithDetails,
 } from '@/lib/constants/appointments'
@@ -52,6 +54,10 @@ export function AppointmentItem({
   }
 
   const patientName = appointment.patients?.full_name ?? 'Paciente sin asignar'
+  const isFollowUp = isFollowUpAppointment(appointment)
+  const serviceLabel = isFollowUp
+    ? FOLLOW_UP_NOTE
+    : (appointment.services?.name ?? 'Sin servicio')
 
   return (
     <li className="rounded-2xl border border-beige-100 bg-white p-4 shadow-card">
@@ -68,8 +74,8 @@ export function AppointmentItem({
               {patientName}
             </p>
             <p className="text-sm text-ink-500">
-              {appointment.services?.name ?? 'Sin servicio'}
-              {appointment.services?.modality
+              {serviceLabel}
+              {!isFollowUp && appointment.services?.modality
                 ? ` · ${APPOINTMENT_MODALITY_LABELS[appointment.services.modality]}`
                 : ''}
             </p>
@@ -83,7 +89,7 @@ export function AppointmentItem({
                 Enlace de la sesión
               </a>
             ) : null}
-            {appointment.notes ? (
+            {appointment.notes && !isFollowUp ? (
               <p className="mt-1 text-sm text-ink-400">{appointment.notes}</p>
             ) : null}
           </div>

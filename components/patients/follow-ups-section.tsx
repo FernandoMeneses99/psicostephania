@@ -58,6 +58,7 @@ export function FollowUpsSection({ patientId, items }: FollowUpsSectionProps) {
     const form = new FormData(event.currentTarget)
     const result = await createFollowUpAction(patientId, {
       follow_up_date: String(form.get('follow_up_date') ?? ''),
+      follow_up_time: String(form.get('follow_up_time') ?? '') || null,
       observations: String(form.get('observations') ?? '') || null,
       goals: String(form.get('goals') ?? '') || null,
       status: String(form.get('status') ?? 'pendiente') as FollowUpStatus,
@@ -201,22 +202,32 @@ export function FollowUpsSection({ patientId, items }: FollowUpsSectionProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="status">Estado</Label>
-                  <select
-                    id="status"
-                    name="status"
-                    className={selectClass}
-                    defaultValue="pendiente"
-                  >
-                    {(Object.keys(FOLLOW_UP_STATUS_LABELS) as FollowUpStatus[]).map(
-                      (status) => (
-                        <option key={status} value={status}>
-                          {FOLLOW_UP_STATUS_LABELS[status]}
-                        </option>
-                      ),
-                    )}
-                  </select>
+                  <Label htmlFor="follow_up_time">Hora (opcional)</Label>
+                  <Input
+                    id="follow_up_time"
+                    name="follow_up_time"
+                    type="time"
+                    defaultValue="09:00"
+                  />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="status">Estado</Label>
+                <select
+                  id="status"
+                  name="status"
+                  className={selectClass}
+                  defaultValue="pendiente"
+                >
+                  {(Object.keys(FOLLOW_UP_STATUS_LABELS) as FollowUpStatus[]).map(
+                    (status) => (
+                      <option key={status} value={status}>
+                        {FOLLOW_UP_STATUS_LABELS[status]}
+                      </option>
+                    ),
+                  )}
+                </select>
               </div>
 
               <div className="space-y-2">

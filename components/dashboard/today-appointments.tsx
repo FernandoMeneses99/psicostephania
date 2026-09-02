@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import {
   APPOINTMENT_MODALITY_LABELS,
   APPOINTMENT_STATUS_LABELS,
+  FOLLOW_UP_NOTE,
+  isFollowUpAppointment,
   type AppointmentStatus,
   type AppointmentWithDetails,
 } from '@/lib/constants/appointments'
@@ -73,8 +75,11 @@ export function TodayAppointments({
                   {appointment.patients?.full_name ?? 'Paciente sin asignar'}
                 </p>
                 <p className="text-sm text-ink-500">
-                  {appointment.services?.name ?? 'Sin servicio'}
-                  {appointment.services?.modality
+                  {isFollowUpAppointment(appointment)
+                    ? FOLLOW_UP_NOTE
+                    : appointment.services?.name ?? 'Sin servicio'}
+                  {!isFollowUpAppointment(appointment) &&
+                  appointment.services?.modality
                     ? ` · ${
                         APPOINTMENT_MODALITY_LABELS[
                           appointment.services.modality

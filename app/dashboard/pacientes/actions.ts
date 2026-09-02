@@ -11,6 +11,8 @@ import {
   type PatientInput,
 } from '@/lib/services/patients'
 import type { FollowUpStatus, PatientStatus } from '@/lib/constants/patients'
+import { bogotaDate } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/server'
 
 export type ActionResult = { error: string | null }
 
@@ -57,6 +59,7 @@ export async function createFollowUpAction(
   patientId: string,
   input: {
     follow_up_date: string
+    follow_up_time: string | null
     observations: string | null
     goals: string | null
     status: FollowUpStatus
@@ -72,7 +75,27 @@ export async function createFollowUpAction(
   })
   if (error) return { error }
 
+  // Crea una cita en la agenda para que el seguimiento programado
+  // sea visible en fecha y hora dentro del calendario.
+  const time = input.follow_up_time?.trim() || '09:00'
+  const start = bogotaDate(input.follow_up_date, time)
+  const end = new Date(start.getTime() + 50 * 60_000)
+
+  const supabase = await createClient()
+  const { error: agendaError } = await supabase.from('appointments').insert({
+    patient_id: patientId,
+    service_id: null,
+    starts_at: start.toISOString(),
+    ends_at: end.toISOString(),
+    status: 'programada',
+    virtual_link: null,
+    notes: 'Seguimiento terapéutico',
+  })
+  if (agendaError) return { error: 'El seguimiento se creó, pero no se pudo agregar a la agenda.' }
+
   revalidatePath(`/dashboard/pacientes/${patientId}`)
+  revalidatePath('/dashboard/agenda')
+  revalidatePath('/dashboard')
   return { error: null }
 }
 

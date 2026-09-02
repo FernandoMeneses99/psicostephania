@@ -49,3 +49,12 @@ export const APPOINTMENT_FLOW: {
 ]
 
 export const DURATION_OPTIONS = [30, 45, 50, 60, 90]
+
+/** Nota que identifica a una cita creada desde un seguimiento terapéutico. */
+export const FOLLOW_UP_NOTE = 'Seguimiento terapéutico'
+
+export function isFollowUpAppointment(
+  appointment: Pick<AppointmentWithDetails, 'notes'>,
+): boolean {
+  return appointment.notes?.trim() === FOLLOW_UP_NOTE
+}

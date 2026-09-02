@@ -11,6 +11,7 @@ import type { EventClickArg, DateSelectArg } from '@fullcalendar/core'
 import type { CalendarOptions } from '@fullcalendar/core'
 
 import type { AppointmentWithDetails } from '@/lib/constants/appointments'
+import { isFollowUpAppointment } from '@/lib/constants/appointments'
 
 const STATUS_COLORS: Record<AppointmentWithDetails['status'], string> = {
   solicitud_pendiente: '#f59e0b',
@@ -20,6 +21,8 @@ const STATUS_COLORS: Record<AppointmentWithDetails['status'], string> = {
   cancelada: '#f87171',
   no_asistio: '#fbbf24',
 }
+
+const FOLLOW_UP_COLOR = '#a28763'
 
 type CalendarProps = {
   appointments: AppointmentWithDetails[]
@@ -32,16 +35,24 @@ function toDateKey(iso: string): string {
 export function AgendaCalendar({ appointments }: CalendarProps) {
   const router = useRouter()
 
-  const events = appointments.map((appointment) => ({
-    id: appointment.id,
-    title: appointment.patients?.full_name ?? 'Sin paciente',
-    start: appointment.starts_at,
-    end: appointment.ends_at,
-    allDay: false,
-    backgroundColor: STATUS_COLORS[appointment.status],
-    borderColor: STATUS_COLORS[appointment.status],
-    extendedProps: { date: toDateKey(appointment.starts_at) },
-  }))
+  const events = appointments.map((appointment) => {
+    const isFollowUp = isFollowUpAppointment(appointment)
+    const color = isFollowUp
+      ? FOLLOW_UP_COLOR
+      : STATUS_COLORS[appointment.status]
+    return {
+      id: appointment.id,
+      title: `${isFollowUp ? 'Seguimiento · ' : ''}${
+        appointment.patients?.full_name ?? 'Sin paciente'
+      }`,
+      start: appointment.starts_at,
+      end: appointment.ends_at,
+      allDay: false,
+      backgroundColor: color,
+      borderColor: color,
+      extendedProps: { date: toDateKey(appointment.starts_at) },
+    }
+  })
 
   function handleEventClick(info: EventClickArg) {
     const key = info.event.extendedProps.date as string
