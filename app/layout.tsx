@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Lora, Nunito_Sans } from 'next/font/google'
+import { CookieConsent } from '@/components/layout/cookie-consent'
 import './globals.css'
 
 const lora = Lora({
@@ -56,7 +57,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${lora.variable} ${nunitoSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   )
 }
