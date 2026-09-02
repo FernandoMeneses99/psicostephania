@@ -12,7 +12,7 @@ import { getPatientOptions, getServiceOptions, getDayAppointments, getMonthAppoi
 import { AppointmentForm } from '@/components/agenda/appointment-form'
 import { AppointmentItem } from '@/components/agenda/appointment-item'
 import { MonthGrid } from '@/components/agenda/month-grid'
-import { AgendaCalendar } from '@/components/agenda/calendar'
+import { CalendarClient } from '@/components/agenda/calendar-client'
 import { shiftDateKey } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -66,7 +66,7 @@ export default async function AgendaPage({
         />
       </div>
 
-      <AgendaCalendar appointments={calendarAppointments} />
+      <CalendarClient appointments={calendarAppointments} />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6">
