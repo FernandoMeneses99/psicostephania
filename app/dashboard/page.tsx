@@ -15,9 +15,15 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { getDashboardMetrics } from '@/lib/services/dashboard'
+import { getDayAppointments } from '@/lib/services/appointments'
+import { todayKey } from '@/lib/dates'
+import { TodayAppointments } from '@/components/dashboard/today-appointments'
 
 export default async function DashboardHome() {
-  const metrics = await getDashboardMetrics()
+  const [metrics, todayAppointments] = await Promise.all([
+    getDashboardMetrics(),
+    getDayAppointments(await todayKey()),
+  ])
 
   const statCards = [
     {
@@ -96,20 +102,7 @@ export default async function DashboardHome() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {metrics.todayAppointments === 0 ? (
-              <div className="flex flex-col items-center gap-2 rounded-2xl border border-dashed border-beige-200 bg-beige-50 px-6 py-10 text-center">
-                <CalendarDays className="h-8 w-8 text-ink-400" />
-                <p className="text-sm font-medium text-ink-700">
-                  No tienes consultas hoy
-                </p>
-                <p className="text-sm text-ink-500">
-                  Disfruta el día o agenda nuevas citas desde la agenda.
-                </p>
-                <Button asChild variant="outline" size="sm" className="mt-2">
-                  <Link href="/dashboard/agenda">Ver agenda</Link>
-                </Button>
-              </div>
-            ) : null}
+            <TodayAppointments appointments={todayAppointments} />
           </CardContent>
         </Card>
 
