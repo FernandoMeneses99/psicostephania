@@ -113,6 +113,7 @@ export async function getAppointmentsInRange(
 export type PatientOption = {
   id: string
   full_name: string
+  email: string | null
 }
 
 export type ServiceOption = {
@@ -129,7 +130,7 @@ export async function getPatientOptions(): Promise<PatientOption[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('patients')
-    .select('id, full_name')
+    .select('id, full_name, email')
     .eq('status', 'activo')
     .order('full_name', { ascending: true })
 
