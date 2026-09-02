@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
   <defs>
-    <linearGradient id="ps-fav" x1="0" y1="0" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+    <linearGradient id="ps-ic" x1="0" y1="0" x2="0" y2="48" gradientUnits="userSpaceOnUse">
       <stop stop-color="#c06f68"/>
       <stop offset="1" stop-color="#8f4541"/>
     </linearGradient>
   </defs>
-  <rect width="48" height="48" rx="14" fill="url(#ps-fav)"/>
+  <rect width="48" height="48" rx="14" fill="url(#ps-ic)"/>
   <text x="24" y="35" font-family="Georgia, 'Times New Roman', serif" font-size="31" font-weight="600" fill="#ffffff" text-anchor="middle">S</text>
   <circle cx="39" cy="9" r="3.4" fill="#a2bfa2"/>
 </svg>

@@ -86,8 +86,15 @@ export function DashboardSidebar() {
         )}
       >
         <div className="flex h-16 items-center justify-between border-b border-beige-100 px-6">
-          <Link href="/dashboard" className="font-sans text-lg font-medium text-ink-900">
-            Psico·<span className="text-primary-600">Stephania</span>
+          <Link href="/dashboard" className="flex items-center gap-2.5 font-sans text-lg font-medium text-ink-900">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.svg"
+              alt="Psico. Stephania"
+              className="h-7 w-auto"
+              width={118}
+              height={24}
+            />
           </Link>
           <button
             type="button"

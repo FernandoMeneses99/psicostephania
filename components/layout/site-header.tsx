@@ -27,9 +27,16 @@ export function SiteHeader() {
       >
         <Link
           href="#inicio"
-          className="font-sans text-xl font-medium text-ink-900"
+          className="flex items-center gap-2.5 font-sans text-xl font-medium text-ink-900"
         >
-          Psico·<span className="text-primary-600">Stephania</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.svg"
+            alt="Psico. Stephania"
+            className="h-8 w-auto"
+            width={118}
+            height={24}
+          />
         </Link>
 
         <div className="hidden items-center gap-6 lg:flex">
