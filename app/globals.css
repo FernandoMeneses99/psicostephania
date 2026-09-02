@@ -112,3 +112,29 @@
     text-wrap: balance;
   }
 }
+
+/* ============================================================
+   Impresión / exportación a PDF
+   Oculta la navegación del panel y ajusta el contenido para
+   que al guardar como PDF solo aparezca el documento.
+   ============================================================ */
+@media print {
+  aside,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .flex-1 {
+    padding-left: 0 !important;
+  }
+
+  body {
+    background: #ffffff !important;
+  }
+
+  html,
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
