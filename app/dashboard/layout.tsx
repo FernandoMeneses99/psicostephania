@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { DashboardSidebar } from '@/components/dashboard/sidebar'
+import { UpcomingNotifications } from '@/components/dashboard/upcoming-notifications'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function DashboardLayout({
@@ -19,6 +20,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-dvh bg-beige-50">
       <DashboardSidebar />
+      <UpcomingNotifications />
       <div className="flex-1 lg:pl-72">
         <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
           {children}
