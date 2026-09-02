@@ -7,9 +7,14 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <p className="font-sans text-xl font-medium text-ink-900">
-              Psico·<span className="text-primary-600">Stephania</span>
-            </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.svg"
+              alt="Psico. Stephania"
+              className="h-8 w-auto"
+              width={118}
+              height={24}
+            />
             <p className="mt-3 max-w-sm text-sm text-ink-500">
               Acompañamiento psicológico profesional, confidencial y
               personalizado. Un espacio seguro para cuidar tu bienestar
@@ -30,7 +35,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <a
-                  href="https://instagram.com"
+                  href="https://instagram.com/psico.stephania"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 hover:text-primary-700"
@@ -40,7 +45,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <a
-                  href="https://tiktok.com"
+                  href="https://tiktok.com/@psico.stephania"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 hover:text-primary-700"
