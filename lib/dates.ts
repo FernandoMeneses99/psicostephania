@@ -7,7 +7,7 @@ export function todayKey(): string {
 
 /** Extrae { year, month } (1-12) de una clave YYYY-MM-DD. */
 export function selectedYearMonth(key: string): { year: number; month: number } {
-  const [, year, month] = key.split('-').map(Number)
+  const [year, month] = key.split('-').map(Number)
   return { year, month: month || 1 }
 }
 

@@ -8,10 +8,11 @@ import {
   selectedYearMonth,
   todayKey,
 } from '@/lib/dates'
-import { getPatientOptions, getServiceOptions, getDayAppointments, getMonthAppointmentDays } from '@/lib/services/appointments'
+import { getPatientOptions, getServiceOptions, getDayAppointments, getMonthAppointmentDays, getAppointmentsInRange, monthRangeInBogota } from '@/lib/services/appointments'
 import { AppointmentForm } from '@/components/agenda/appointment-form'
 import { AppointmentItem } from '@/components/agenda/appointment-item'
 import { MonthGrid } from '@/components/agenda/month-grid'
+import { AgendaCalendar } from '@/components/agenda/calendar'
 import { shiftDateKey } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -34,13 +35,16 @@ export default async function AgendaPage({
   const { date: dateParam } = await searchParams
   const selectedKey = isValidDateKey(dateParam) ? dateParam : await todayKey()
   const { year, month } = selectedYearMonth(selectedKey)
+  const { start: monthStart, end: monthEnd } = monthRangeInBogota(year, month)
 
-  const [appointments, monthDays, patients, services] = await Promise.all([
-    getDayAppointments(selectedKey),
-    getMonthAppointmentDays(year, month),
-    getPatientOptions(),
-    getServiceOptions(),
-  ])
+  const [appointments, monthDays, patients, services, calendarAppointments] =
+    await Promise.all([
+      getDayAppointments(selectedKey),
+      getMonthAppointmentDays(year, month),
+      getPatientOptions(),
+      getServiceOptions(),
+      getAppointmentsInRange(monthStart, monthEnd),
+    ])
 
   const previousDay = shiftDateKey(selectedKey, -1)
   const nextDay = shiftDateKey(selectedKey, 1)
@@ -61,6 +65,8 @@ export default async function AgendaPage({
           defaultDate={selectedKey}
         />
       </div>
+
+      <AgendaCalendar appointments={calendarAppointments} />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6">
